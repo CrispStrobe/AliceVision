@@ -322,11 +322,16 @@ endif()
 # Boost
 # ==============================================================================
 option(BOOST_NO_CXX11 "if Boost is compiled without C++11 support (as it is often the case in OS packages) this must be enabled to avoid symbol conflicts (SCOPED_ENUM)." OFF)
-set(ALICEVISION_BOOST_COMPONENTS atomic container date_time graph json log log_setup program_options regex serialization system thread timer)
+set(ALICEVISION_BOOST_COMPONENTS atomic container date_time graph json log log_setup program_options regex serialization thread timer)
 if (ALICEVISION_BUILD_TESTS)
     set(ALICEVISION_BOOST_COMPONENT_UNITTEST unit_test_framework)
 endif()
 find_package(Boost 1.76.0 QUIET COMPONENTS ${ALICEVISION_BOOST_COMPONENTS} ${ALICEVISION_BOOST_COMPONENT_UNITTEST})
+
+if(Boost_FOUND AND NOT TARGET Boost::system)
+    add_library(Boost::system INTERFACE IMPORTED)
+    set_target_properties(Boost::system PROPERTIES INTERFACE_LINK_LIBRARIES Boost::headers)
+endif()
 
 if (Boost_FOUND)
     message(STATUS "Boost ${Boost_LIB_VERSION} found.")
@@ -372,7 +377,7 @@ endif()
 # ==============================================================================
 # Nanoflann
 # ==============================================================================
-if (ALICEVISION_BUILD_MVS OR ALICEVISION_BUILD_LIDAR)
+if (ALICEVISION_BUILD_MVS OR ALICEVISION_BUILD_LIDAR OR ALICEVISION_BUILD_SFM)
     find_package(nanoflann REQUIRED)
 endif()
 

@@ -52,8 +52,10 @@ bool weightObservationsFromDistance(sfmData::SfMData & sfmData, size_t neighboor
     }
 
     // Loop per view
-    for (auto & [idView, pointCloud] : perViewObservations)
+    for (auto & entry : perViewObservations)
     {
+        const auto & idView = entry.first;
+        auto & pointCloud = entry.second;
         int N = pointCloud.pts.size();
 
         if (N == 0)
