@@ -10,11 +10,9 @@ optimization, and authoritative saved depth-map raster dimensions. Default
 device geometry remains double; `AV_SYCL_METAL_FLOAT=1` requires a Metal GPU.
 
 See [the branch build instructions and portable CPU/Metal regressions](contrib/crisp3ds/README.md).
-Native Apple M1 depth estimation/filtering and synthetic CPU/Metal tests ran,
-but those checks do **not** establish accurate full-object reconstruction or a
-solved Dragon STL. The newer AdaptiveCpp Metal runtime is separate from the
-older CPU-only Darwin backport linked below. This branch ships source, not
-installed binaries or private datasets.
+The GPU profile uses a newer AdaptiveCpp Metal runtime; the older Darwin
+CPU backport is a separate branch. This fork includes source and build tools,
+without installed binaries or datasets.
 
 ---
 
