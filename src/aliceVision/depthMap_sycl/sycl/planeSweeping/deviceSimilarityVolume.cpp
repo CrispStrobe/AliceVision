@@ -759,7 +759,7 @@ sycl::event sycl_volumeAggregatePath(SyclDeviceMemoryPitched<TSim, 3>& out_volAg
 
                 // aggregate into the final output
                 TSim& volume_xyz = out_volAgr_acc(v);
-                volume_xyz = TSim(float(volume_xyz) * float(filteringIndex) + pathCost) / float(filteringIndex + 1);
+                volume_xyz = TSim((float(volume_xyz) * float(filteringIndex) + pathCost) / float(filteringIndex + 1));
             });
         });
 
