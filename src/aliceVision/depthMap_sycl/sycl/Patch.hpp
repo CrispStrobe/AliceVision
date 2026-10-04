@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <numbers>
+
 #include <aliceVision/depthMap_sycl/sycl/buffer.hpp>
 #include <aliceVision/depthMap_sycl/sycl/color.hpp>
 #include <aliceVision/depthMap_sycl/sycl/matrix.hpp>

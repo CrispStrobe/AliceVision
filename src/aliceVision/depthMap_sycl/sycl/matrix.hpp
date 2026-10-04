@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <numbers>
+
 #include <aliceVision/depthMap_sycl/sycl/sycl.hpp>
 
 // mn MATRIX ADDRESSING: mxy = x*n+y (x-row,y-col), (m-number of rows, n-number of columns)
