@@ -118,7 +118,7 @@ sycl::event sycl_depthMapComputeNormal(SyclDeviceMemoryPitched<sycl::float3, 2>&
  */
 sycl::event sycl_depthSimMapOptimizeGradientDescent(SyclDeviceMemoryPitched<sycl::float2, 2>& out_optimizeDepthSimMap_dmp,
                                                     SyclDeviceMemoryPitched<float, 2>& inout_imgVariance_dmp,
-                                                    //SyclDeviceMemoryPitched<float, 2>& inout_tmpOptDepthMap_dmp,
+                                                    SyclDeviceMemoryPitched<sycl::float2, 2>& inout_depthSnapshot_dmp,
                                                     const SyclDeviceMemoryPitched<sycl::float2, 2>& in_sgmDepthPixSizeMap_dmp,
                                                     const SyclDeviceMemoryPitched<sycl::float2, 2>& in_refineDepthSimMap_dmp,
                                                     const CameraParams& camParams,

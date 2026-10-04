@@ -464,6 +464,7 @@ sycl::event sycl_depthMapComputeNormal(SyclDeviceMemoryPitched<sycl::float3, 2>&
 
 sycl::event sycl_depthSimMapOptimizeGradientDescent(SyclDeviceMemoryPitched<sycl::float2, 2>& out_optimizeDepthSimMap_dmp,
                                                     SyclDeviceMemoryPitched<float, 2>& inout_imgVariance_dmp,
+                                                    SyclDeviceMemoryPitched<sycl::float2, 2>& inout_depthSnapshot_dmp,
                                                     const SyclDeviceMemoryPitched<sycl::float2, 2>& in_sgmDepthPixSizeMap_dmp,
                                                     const SyclDeviceMemoryPitched<sycl::float2, 2>& in_refineDepthSimMap_dmp,
                                                     const CameraParams& camParams,
@@ -489,6 +490,7 @@ sycl::event sycl_depthSimMapOptimizeGradientDescent(SyclDeviceMemoryPitched<sycl
     // Accessors
     SyclDevicePitchedAccess out_optimizeDepthSimMap_acc{out_optimizeDepthSimMap_dmp};
     SyclDevicePitchedAccess inout_imgVariance_acc{inout_imgVariance_dmp};
+    const SyclDevicePitchedAccess depthSnapshot_acc{inout_depthSnapshot_dmp};
     const SyclDevicePitchedAccess in_sgmDepthPixSizeMap_acc{in_sgmDepthPixSizeMap_dmp};
     const SyclDevicePitchedAccess in_refineDepthSimMap_acc{in_refineDepthSimMap_dmp};
     const MipmapImageAccess rcMipmap_acc{rcDeviceMipmapImage};
@@ -521,6 +523,8 @@ sycl::event sycl_depthSimMapOptimizeGradientDescent(SyclDeviceMemoryPitched<sycl
     for(int iter = 0; iter < refineParams.optimizationNbIterations; ++iter) // default nb iterations is 100
     {
         const bool firstIter = (iter==0);
+        // Match CUDA: freeze all neighbor depths before each parallel optimization iteration.
+        prerequisite = inout_depthSnapshot_dmp.copyFrom(out_optimizeDepthSimMap_dmp, queue, prerequisite);
 
         // adjust depth/sim by using previously computed depths
         prerequisite = queue.submit([&] (sycl::handler& h) {
@@ -546,7 +550,7 @@ sycl::event sycl_depthSimMapOptimizeGradientDescent(SyclDeviceMemoryPitched<sycl
 
                 if (depthOpt > 0.0f)
                 {
-                    const sycl::float2 depthSmoothStepEnergy = getCellSmoothStepEnergy(camParams, out_optimizeDepthSimMap_acc, rCoords, roiBegin); // (smoothStep, energy)
+                    const sycl::float2 depthSmoothStepEnergy = getCellSmoothStepEnergy(camParams, depthSnapshot_acc, rCoords, roiBegin); // (smoothStep, energy)
                     float stepToSmoothDepth = depthSmoothStepEnergy.x();
                     stepToSmoothDepth = sycl::copysign(sycl::fmin(sycl::fabs(stepToSmoothDepth), sgmPixSize / 10.0f), stepToSmoothDepth);
                     const float depthEnergy = depthSmoothStepEnergy.y(); // max angle with neighbors

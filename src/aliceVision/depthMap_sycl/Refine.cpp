@@ -30,6 +30,7 @@ namespace depthMap_sycl {
     _normalMap_dmp(queue),
     _volumeRefineSim_dmp(queue),
     _optImgVariance_dmp(queue),
+    _optDepthSnapshot_dmp(queue),
     _queue(queue)
 {
     // get tile maximum dimensions
@@ -62,7 +63,10 @@ namespace depthMap_sycl {
 
     // allocate depth/sim map optimization buffers
     if (_refineParams.useColorOptimization)
+    {
         allocationSuccess &= _optImgVariance_dmp.allocate(depthSimMapDim);
+        allocationSuccess &= _optDepthSnapshot_dmp.allocate(depthSimMapDim);
+    }
 }
 
 sycl::event Refine::refineRc(const Tile& tile,
@@ -240,6 +244,7 @@ sycl::event Refine::optimizeDepthSimMap(const Tile& tile, DeviceCache& deviceCac
     sycl::event gradientDescent = sycl_depthSimMapOptimizeGradientDescent(
                                             _optimizedDepthSimMap_dmp,  // output depth/sim map optimized
                                             _optImgVariance_dmp,        // image variance buffer pre-allocate
+                                            _optDepthSnapshot_dmp,     // immutable neighbor depths during each iteration
                                             _sgmDepthPixSizeMap_dmp,    // input SGM upscaled depth/pixSize map
                                             _refinedDepthSimMap_dmp,    // input refined and fused depth/sim map
                                             camParams,

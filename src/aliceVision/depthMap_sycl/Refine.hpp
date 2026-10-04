@@ -104,6 +104,7 @@ class Refine
     SyclDeviceMemoryPitched<sycl::float3, 2> _normalMap_dmp;             //< rc normal map (for debug / intermediate results purposes)
     SyclDeviceMemoryPitched<TSimRefine, 3> _volumeRefineSim_dmp;   //< rc refine similarity volume
     SyclDeviceMemoryPitched<float, 2> _optImgVariance_dmp;         //< for color optimization: image variance buffer
+    SyclDeviceMemoryPitched<sycl::float2, 2> _optDepthSnapshot_dmp; //< persistent prioriteration snapshot for color optimization
     sycl::queue _queue;                                            //< queue for device execution
 };
 
