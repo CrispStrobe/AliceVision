@@ -1,0 +1,163 @@
+{
+  "schema": "crisp3ds_m1_source_verification_v1",
+  "upstream_base": "5d73fa0d23636d3d126f670ab21f8936e1dd7eda",
+  "production_code_commit": "076f9717610ee66145390ad626cd74558dcafbc8",
+  "source_parity": [
+    {
+      "path": "src/CMakeLists.txt",
+      "sha256": "af6c5a211f5c7c42d87fecbbb34d7018aabd4f8d93e0dfd5cc94eb638fcdb221",
+      "exact_bytes_equal": true,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/depthMap_sycl/DepthMapEstimator.hpp",
+      "sha256": "03f5626e8e1d9122adc45790a496fa8fc1ca6ade28a1799f5a30ec0be6ee4175",
+      "exact_bytes_equal": true,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/depthMap_sycl/Refine.cpp",
+      "sha256": "ef02b3d6764ea8f9b2e3a3a8b75e6ba43b7f973567dc4eca51e8ec9022e5cc57",
+      "exact_bytes_equal": false,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/depthMap_sycl/Refine.hpp",
+      "sha256": "2e0433b58ba97bd31d2280232d572e6687447ee56a3a45b9f7915d41d7763a30",
+      "exact_bytes_equal": true,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/depthMap_sycl/computeOnMultiDevices.cpp",
+      "sha256": "1f2d4bb3ea0282aa868cc55e8a5e479dbf4cbe55cc7990b522c621e288367947",
+      "exact_bytes_equal": true,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/depthMap_sycl/sycl/DeviceCache.hpp",
+      "sha256": "5924aee047c9e3d396b9f24cd2129abfba7c336499b1b2de941e746511e6dcba",
+      "exact_bytes_equal": true,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/depthMap_sycl/sycl/DeviceWideScalar.hpp",
+      "sha256": "bf1322032d3c4bdf9a513ded7b50f02d20552708751d2ef0fd3ffbf360b560e2",
+      "exact_bytes_equal": true,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/depthMap_sycl/sycl/Patch.hpp",
+      "sha256": "6e3a8c9bcd29d224d9d2af04a76716c80430d10fb6ea3c8e2c2a37167c7993e9",
+      "exact_bytes_equal": true,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/depthMap_sycl/sycl/eig33.hpp",
+      "sha256": "5a303a72fb28e5964f7772a0e0e3068bf2b7e07e8602f72f6b6d358247cf5859",
+      "exact_bytes_equal": true,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/depthMap_sycl/sycl/matrix.hpp",
+      "sha256": "321325529acdc7edb691bea91f766ebcdb0d9181160fadfa405ced91dc9d2d66",
+      "exact_bytes_equal": true,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/depthMap_sycl/sycl/planeSweeping/deviceDepthSimilarityMap.cpp",
+      "sha256": "3b18edc461ccade7bf747334720ef429066606f528dccf9e6075ca7fbbb0b2a1",
+      "exact_bytes_equal": false,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/depthMap_sycl/sycl/planeSweeping/deviceDepthSimilarityMap.hpp",
+      "sha256": "a5285d570fb54ad0f881ab91f096fb56a8c980e0e7c3b68840f759f553949eb6",
+      "exact_bytes_equal": true,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/depthMap_sycl/sycl/planeSweeping/deviceSimilarityVolume.cpp",
+      "sha256": "5f9b70fde1fa70754f9afc1594e30fe59c69b8d3b6e3295e1cf8c8cef16c257b",
+      "exact_bytes_equal": false,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/fuseCut/Kdtree.hpp",
+      "sha256": "73f62d6519d627eb770473407d177b98c626b61aaeb96da8a871b4d4d65fdcb4",
+      "exact_bytes_equal": true,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/mvsUtils/MultiViewParams.cpp",
+      "sha256": "5e03d6b2cbc66dd9c062d808781bf8c26046a4a7a5aad7518ea84a33531c7c65",
+      "exact_bytes_equal": true,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/mvsUtils/MultiViewParams.hpp",
+      "sha256": "95f27f7a1416398b81c0aa6eb65d3171f5cc0b4f262810c9986491d1861e62f5",
+      "exact_bytes_equal": true,
+      "equal_after_declared_include_normalization": true
+    },
+    {
+      "path": "src/aliceVision/sfm/pipeline/expanding/DistanceWeighting.cpp",
+      "sha256": "3c1e97b89793b328c7e1bdc7be22d40c52c12f8409fe667a02ce53ee5bfe0c2f",
+      "exact_bytes_equal": true,
+      "equal_after_declared_include_normalization": true
+    }
+  ],
+  "diagnostic_include_normalizations": "Three isolated diagnostic compilation units used alternate includes pointing to identical headers; repository-relative includes are preserved. No numerical code changed during publication.",
+  "portable_contracts": {
+    "status": "passed",
+    "inputs_unchanged": true,
+    "environment": "Apple M1, macOS26, AdaptiveCpp a215fbcd, LLVM20.1.8",
+    "stages": [
+      {
+        "name": "source-contract",
+        "exit_code": 0
+      },
+      {
+        "name": "sgm_average-compile",
+        "exit_code": 0
+      },
+      {
+        "name": "sgm_average-cpu",
+        "exit_code": 0
+      },
+      {
+        "name": "sgm_average-metal",
+        "exit_code": 0
+      },
+      {
+        "name": "snapshot_jacobi-compile",
+        "exit_code": 0
+      },
+      {
+        "name": "snapshot_jacobi-cpu",
+        "exit_code": 0
+      },
+      {
+        "name": "snapshot_jacobi-metal",
+        "exit_code": 0
+      },
+      {
+        "name": "centered_ncc-compile",
+        "exit_code": 0
+      },
+      {
+        "name": "centered_ncc-cpu",
+        "exit_code": 0
+      },
+      {
+        "name": "centered_ncc-metal",
+        "exit_code": 0
+      },
+      {
+        "name": "raster",
+        "exit_code": 0
+      }
+    ],
+    "covers": "Production callsites; CPU/Metal SGM arithmetic, Jacobi, centered SimStat; compiled actual raster getters and extent guard.",
+    "does_not_establish": "Full reconstruction accuracy, all-platform compatibility or a fresh complete AliceVision build."
+  }
+}
