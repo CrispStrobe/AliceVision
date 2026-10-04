@@ -521,7 +521,7 @@ inline float compNCCby3DptsYK(const CameraParams& rcDeviceCamParams,
             const float w = CostYKfromLab(xp, yp, rcCenterColor, rcPatchCoordColor, invGammaC, invGammaP) * CostYKfromLab(xp, yp, tcCenterColor, tcPatchCoordColor, invGammaC, invGammaP);
 
             // update simStat
-            sst.update(rcPatchCoordColor.x(), tcPatchCoordColor.x(), w);
+            sst.update(rcPatchCoordColor.x() - rcCenterColor.x(), tcPatchCoordColor.x() - tcCenterColor.x(), w);
         }
     }
 
@@ -660,7 +660,7 @@ inline float compNCCby3DptsYK_customPatchPattern(const CameraParams& rcDeviceCam
                 const float w = CostYKfromLab(rcCenterColor, rcPatchCoordColor, invGammaC) * CostYKfromLab(tcCenterColor, tcPatchCoordColor, invGammaC);
 
                 // update simStat
-                sst.update(rcPatchCoordColor.x(), tcPatchCoordColor.x(), w);
+                sst.update(rcPatchCoordColor.x() - rcCenterColor.x(), tcPatchCoordColor.x() - tcCenterColor.x(), w);
             }
         }
         else // full patch pattern
@@ -690,7 +690,7 @@ inline float compNCCby3DptsYK_customPatchPattern(const CameraParams& rcDeviceCam
                     const float w = CostYKfromLab(xp, yp, rcCenterColor, rcPatchCoordColor, invGammaC, invGammaP) * CostYKfromLab(xp, yp, tcCenterColor, tcPatchCoordColor, invGammaC, invGammaP);
 
                     // update simStat
-                    sst.update(rcPatchCoordColor.x(), tcPatchCoordColor.x(), w);
+                    sst.update(rcPatchCoordColor.x() - rcCenterColor.x(), tcPatchCoordColor.x() - tcCenterColor.x(), w);
                 }
             }
         }
