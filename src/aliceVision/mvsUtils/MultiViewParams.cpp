@@ -230,9 +230,23 @@ MultiViewParams::MultiViewParams(const sfmData::SfMData& sfmData,
             camArr[i] = KArr[i] * (RArr[i] | (Point3d(0.0, 0.0, 0.0) - RArr[i] * CArr[i]));
         }
 
-        // find max width and max height
-        _maxImageWidth = std::max(_maxImageWidth, imgParams.width / _imagesScale.at(i));
-        _maxImageHeight = std::max(_maxImageHeight, imgParams.height / _imagesScale.at(i));
+        // Saved maps use ceil-sized sampling grids; projection metadata alone
+        // cannot recover their raster extent by floor-dividing original images.
+        if (fileExists && (fileType == mvsUtils::EFileType::depthMap || fileType == mvsUtils::EFileType::normalMap))
+        {
+            int width, height;
+            image::readImageSize(imgParams.path, width, height);
+            const int scale = _imagesScale.at(i);
+            if (scale <= 0 || width <= 0 || height <= 0 ||
+                width < imgParams.width / scale || width > (imgParams.width + scale - 1) / scale ||
+                height < imgParams.height / scale || height > (imgParams.height + scale - 1) / scale)
+                throw std::runtime_error("Saved map dimensions disagree with projection downscale: " + imgParams.path);
+            _mapRasterWidths.at(i) = width;
+            _mapRasterHeights.at(i) = height;
+        }
+        // Maximum pre-process dimensions use the same authoritative raster.
+        _maxImageWidth = std::max(_maxImageWidth, _mapRasterWidths.at(i) > 0 ? _mapRasterWidths.at(i) : imgParams.width / _imagesScale.at(i));
+        _maxImageHeight = std::max(_maxImageHeight, _mapRasterHeights.at(i) > 0 ? _mapRasterHeights.at(i) : imgParams.height / _imagesScale.at(i));
     }
 
     ALICEVISION_LOG_INFO("Overall maximum dimension: [" << _maxImageWidth << "x" << _maxImageHeight << "]");

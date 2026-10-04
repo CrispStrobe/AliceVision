@@ -137,9 +137,9 @@ class MultiViewParams
 
     inline int getOriginalSize(int index) const { return _imagesParams.at(index).size; }
 
-    inline int getWidth(int index) const { return _imagesParams.at(index).width / getDownscaleFactor(index); }
+    inline int getWidth(int index) const { return _mapRasterWidths.at(index) > 0 ? _mapRasterWidths.at(index) / _processDownscale : _imagesParams.at(index).width / getDownscaleFactor(index); }
 
-    inline int getHeight(int index) const { return _imagesParams.at(index).height / getDownscaleFactor(index); }
+    inline int getHeight(int index) const { return _mapRasterHeights.at(index) > 0 ? _mapRasterHeights.at(index) / _processDownscale : _imagesParams.at(index).height / getDownscaleFactor(index); }
 
     inline int getSize(int index) const { return _imagesParams.at(index).size / getDownscaleFactor(index); }
 
@@ -273,6 +273,9 @@ class MultiViewParams
     float _maxViewAngle = 70.0f;  // WARNING: may be too low, especially when using seeds from SfM
     /// input sfmData
     const sfmData::SfMData& _sfmData;
+    // Append raster cache after existing members to preserve their offsets.
+    std::vector<int> _mapRasterWidths;
+    std::vector<int> _mapRasterHeights;
 
     void loadMatricesFromTxtFile(int index, const std::string& fileNameP, const std::string& fileNameD);
     void loadMatricesFromRawProjectionMatrix(int index, const double* rawProjMatix);
@@ -290,6 +293,8 @@ class MultiViewParams
         iCamArr.resize(ncams);
         FocK1K2Arr.resize(ncams);
         _imagesScale.resize(ncams, 1);
+        _mapRasterWidths.resize(ncams, 0);
+        _mapRasterHeights.resize(ncams, 0);
     }
 };
 
