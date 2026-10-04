@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <shared_mutex>
+
 #include <aliceVision/mvsUtils/MultiViewParams.hpp>
 #include <aliceVision/mvsUtils/ImagesCache.hpp>
 #include <aliceVision/depthMap_sycl/sycl/DeviceMipmapImage.hpp>

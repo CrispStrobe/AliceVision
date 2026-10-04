@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <shared_mutex>
+
 #include <aliceVision/mvsUtils/MultiViewParams.hpp>
 #include <aliceVision/mvsUtils/TileParams.hpp>
 #include <aliceVision/mvsUtils/fileIO.hpp>
