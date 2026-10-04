@@ -1,5 +1,23 @@
 # ![AliceVision - Photogrammetric Computer Vision Framework](https://github.com/alicevision/AliceVision/raw/develop/docs/logo/AliceVision_banner.png)
 
+## Crisp3DS Apple Silicon branch (`crisp3ds/m1-sycl`)
+
+This fork branch starts at `5d73fa0d23636d3d126f670ab21f8936e1dd7eda`.
+It separates macOS/SYCL build compatibility, an **experimental opt-in Metal
+float profile**, and four numerical/raster corrections: safe SGM averaging,
+centered weighted NCC, immutable neighbor-depth snapshots during parallel
+optimization, and authoritative saved depth-map raster dimensions. Default
+device geometry remains double; `AV_SYCL_METAL_FLOAT=1` requires a Metal GPU.
+
+See [the branch build instructions and portable CPU/Metal regressions](contrib/crisp3ds/README.md).
+Native Apple M1 depth estimation/filtering and synthetic CPU/Metal tests ran,
+but those checks do **not** establish accurate full-object reconstruction or a
+solved Dragon STL. The newer AdaptiveCpp Metal runtime is separate from the
+older CPU-only Darwin backport linked below. This branch ships source, not
+installed binaries or private datasets.
+
+---
+
 [AliceVision](http://alicevision.github.io) is a Photogrammetric Computer Vision Framework which provides a 3D Reconstruction and Camera Tracking algorithms.
 AliceVision aims to provide strong software basis with state-of-the-art computer vision algorithms that can be tested, analyzed and reused.
 The project is a result of collaboration between academia and industry to provide cutting-edge algorithms with the robustness and the quality required for production usage.
