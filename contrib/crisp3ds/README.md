@@ -80,6 +80,13 @@ recorded in [crisp3ds](https://github.com/CrispStrobe/crisp3ds), under
 `tests/evidence/alicevision-native-{sgm-average,centered-ncc,snapshot-optimization,map-raster-fix,dragon-snapshot-control}.json`.
 Some supporting artifacts are local and those files are not all published yet.
 
+A fresh complete build from this fork also passed on the M1 GPU: all 155
+C++ units and the engine dependency graph were rebuilt, and both tools used
+one coherent installation. All twelve depth/confidence arrays matched the
+earlier corrected runs exactly. Its source base and the AdaptiveCpp/metal-cpp
+commits above were checked against current upstream heads on 2026-10-04.
+See `tests/evidence/alicevision-native-current-fork-control.json` in crisp3ds.
+
 The repeated CPU/Metal Jacobi regression matched the serial float32 reference
 exactly. CPU/Metal depth agreement improved, but Metal's synthetic median
 relative radial error remained 4.51%; corrected CPU float was 4.33%.

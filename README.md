@@ -3,6 +3,9 @@
 ## Crisp3DS Apple Silicon branch (`crisp3ds/m1-sycl`)
 
 This fork branch starts at `5d73fa0d23636d3d126f670ab21f8936e1dd7eda`.
+That is the current upstream `develop` commit, checked on 2026-10-04.
+Native depth estimation and filtering have been rebuilt from a fresh source
+tree and run directly on an Apple M1 GPU.
 It separates macOS/SYCL build compatibility, an **experimental opt-in Metal
 float profile**, and four numerical/raster corrections: safe SGM averaging,
 centered weighted NCC, immutable neighbor-depth snapshots during parallel
