@@ -23,16 +23,29 @@ void computeOnMultiDevices(std::vector<int> cams, IDeviceJob& devicejob, int nbD
     // usm_device_allocations and usm_host_allocations should be supported by all AdaptiveCpp backends
     // half support is still a wip but should work fine
 #if defined(TSIM_REFINE_USE_HALF) || defined (ALICEVISION_DEPTHMAP_TEXTURE_USE_HALF)
-    const std::vector<sycl::device> devices = sycl::detail::select_devices(sycl::multi_device_selector(sycl::aspect_selector({
+    const std::vector<sycl::device> candidates = sycl::detail::select_devices(sycl::multi_device_selector(sycl::aspect_selector({
                 //sycl::aspect::fp16, currently returns false regardless because it's still under development
                 sycl::aspect::usm_device_allocations,
                 sycl::aspect::usm_host_allocations
             })));
 #else
-    const std::vector<sycl::device> devices = sycl::detail::select_devices(sycl::multi_device_selector(sycl::aspect_selector({
+    const std::vector<sycl::device> candidates = sycl::detail::select_devices(sycl::multi_device_selector(sycl::aspect_selector({
                 sycl::aspect::usm_device_allocations,
                 sycl::aspect::usm_host_allocations
             })));
+#endif
+
+#ifdef AV_SYCL_METAL_FLOAT
+    // The CPU backend remains visible even with ACPP_VISIBILITY_MASK=metal.
+    // This opt-in profile must never silently execute the float kernels on CPU.
+    std::vector<sycl::device> devices;
+    for (const auto& d : candidates)
+        if (d.is_gpu() && d.get_backend() == sycl::backend::metal)
+            devices.push_back(d);
+    if (devices.empty())
+        throw std::runtime_error("AV_SYCL_METAL_FLOAT requires a Metal GPU");
+#else
+    const auto& devices = candidates;
 #endif
 
     for (const sycl::device& d : devices)

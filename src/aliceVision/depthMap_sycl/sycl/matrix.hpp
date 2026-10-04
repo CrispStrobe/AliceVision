@@ -5,6 +5,7 @@
 // You can obtain one at https://mozilla.org/MPL/2.0/.
 
 #pragma once
+#include <aliceVision/depthMap_sycl/sycl/DeviceWideScalar.hpp>
 
 #include <numbers>
 
@@ -125,7 +126,7 @@ inline float angleBetwV1andV2(const sycl::float3& iV1, const sycl::float3& iV2)
 
     const sycl::float3 V2 = sycl::normalize(iV2);
 
-    return sycl::fabs(sycl::acos(sycl::dot(V1,V2)) / (std::numbers::pi / 180.0f));
+    return sycl::fabs(sycl::acos(sycl::dot(V1,V2)) / (std::numbers::pi_v<DeviceWideScalar> / 180.0f));
 }
 
 inline float angleBetwABandAC(const sycl::float3& A, const sycl::float3& B, const sycl::float3& C)
@@ -133,10 +134,10 @@ inline float angleBetwABandAC(const sycl::float3& A, const sycl::float3& B, cons
     const sycl::float3 V1 = sycl::normalize(B - A);
     const sycl::float3 V2 = sycl::normalize(C - A);
 
-    const double x = double(sycl::dot(V1,V2));
-    double a = sycl::acos(x);
-    a = sycl::isinf(a) ? 0.0 : a;
-    return float(sycl::fabs(a) / (std::numbers::pi / 180.0));
+    const DeviceWideScalar x = DeviceWideScalar(sycl::dot(V1,V2));
+    DeviceWideScalar a = sycl::acos(x);
+    a = sycl::isinf(a) ? DeviceWideScalar(0.0) : a;
+    return float(sycl::fabs(a) / (std::numbers::pi_v<DeviceWideScalar> / DeviceWideScalar(180.0)));
 }
 
 /**
@@ -209,7 +210,7 @@ inline sycl::float3 lineLineIntersect(float& k,
     const sycl::float3 pa = p1 + p21 * fract; //muab.x
     const sycl::float3 pb = p3 + p43 * mub; //muab.y
 
-    const sycl::float3 S = (pa + pb) * 0.5;
+    const sycl::float3 S = (pa + pb) * DeviceWideScalar(0.5);
 
     k = fract;
     l = mub;

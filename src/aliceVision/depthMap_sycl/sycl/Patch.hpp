@@ -5,6 +5,7 @@
 // You can obtain one at https://mozilla.org/MPL/2.0/.
 
 #pragma once
+#include <aliceVision/depthMap_sycl/sycl/DeviceWideScalar.hpp>
 
 #include <numbers>
 
@@ -29,9 +30,9 @@ struct Patch
 
 inline void rotPointAroundVect(sycl::float3& point, const sycl::float3& vect, const int& angle)
 {
-    double ux, uy, uz, vx, vy, vz, wx, wy, wz, sa, ca, x, y, z, u, v, w;
+    DeviceWideScalar ux, uy, uz, vx, vy, vz, wx, wy, wz, sa, ca, x, y, z, u, v, w;
 
-    const double size = sycl::length(point);
+    const DeviceWideScalar size = sycl::length(point);
     x = point.x() / size;
     y = point.y() / size;
     z = point.z() / size;
@@ -49,8 +50,8 @@ inline void rotPointAroundVect(sycl::float3& point, const sycl::float3& vect, co
     wx = w * x;
     wy = w * y;
     wz = w * z;
-    sa = sycl::sin((double)angle * (std::numbers::pi / 180.0));
-    ca = sycl::cos((double)angle * (std::numbers::pi / 180.0));
+    sa = sycl::sin((DeviceWideScalar)angle * (std::numbers::pi_v<DeviceWideScalar> / DeviceWideScalar(180.0)));
+    ca = sycl::cos((DeviceWideScalar)angle * (std::numbers::pi_v<DeviceWideScalar> / DeviceWideScalar(180.0)));
     x = u * (ux + vy + wz) + (x * (v * v + w * w) - u * (vy + wz)) * ca + (-wy + vz) * sa;
     y = v * (ux + vy + wz) + (y * (u * u + w * w) - v * (ux + wz)) * ca + (wx - uz) * sa;
     z = w * (ux + vy + wz) + (z * (u * u + v * v) - w * (ux + vy)) * ca + (-vx + uy) * sa;
@@ -291,7 +292,7 @@ inline void computeRcTcMipmapLevels(float& out_rcMipmapLevel,
 
 inline int angleBetwUnitV1andUnitV2(const sycl::float3& V1, const sycl::float3& V2)
 {
-    return (int)sycl::fabs(sycl::acos(sycl::dot(V1, V2)) / (std::numbers::pi / 180.0f));
+    return (int)sycl::fabs(sycl::acos(sycl::dot(V1, V2)) / (std::numbers::pi_v<DeviceWideScalar> / 180.0f));
 }
 
 /*
@@ -347,7 +348,7 @@ inline void computeHomography(sycl::marray<float, 9>& out_H,
                               const sycl::float3& in_p,
                               const sycl::float3& in_n)
 {
-    // hartley zisserman second edition p.327 (13.2)
+    // hartley zisserman second edition p.327 (DeviceWideScalar(13.2))
     const sycl::float3 _tl = -M3x3mulV3(rcDeviceCamParams.R, rcDeviceCamParams.C);
     const sycl::float3 _tr = -M3x3mulV3(tcDeviceCamParams.R, tcDeviceCamParams.C);
 

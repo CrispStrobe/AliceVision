@@ -5,16 +5,17 @@
 // You can obtain one at https://mozilla.org/MPL/2.0/.
 
 #pragma once
+#include <aliceVision/depthMap_sycl/sycl/DeviceWideScalar.hpp>
 
 namespace aliceVision {
 namespace depthMap_sycl {
 
 // Symmetric Householder reductio3 to tridiago3al form.
 
-static inline void sycl_tred2(double V[3][3], double d[3], double e[3])
+static inline void sycl_tred2(DeviceWideScalar V[3][3], DeviceWideScalar d[3], DeviceWideScalar e[3])
 {
     int i, j, k;
-    double scale, h, f, g, hh;
+    DeviceWideScalar scale, h, f, g, hh;
 
     for(j = 0; j < 3; j++)
     {
@@ -28,20 +29,20 @@ static inline void sycl_tred2(double V[3][3], double d[3], double e[3])
 
         // Scale to avoid u3der/overflow.
 
-        scale = 0.0;
-        h = 0.0;
+        scale = DeviceWideScalar(0.0);
+        h = DeviceWideScalar(0.0);
         for(k = 0; k < i; k++)
         {
             scale = scale + sycl::fabs(d[k]);
         }
-        if(scale == 0.0)
+        if(scale == DeviceWideScalar(0.0))
         {
             e[i] = d[i - 1];
             for(j = 0; j < i; j++)
             {
                 d[j] = V[i - 1][j];
-                V[i][j] = 0.0;
-                V[j][i] = 0.0;
+                V[i][j] = DeviceWideScalar(0.0);
+                V[j][i] = DeviceWideScalar(0.0);
             }
         }
         else
@@ -65,7 +66,7 @@ static inline void sycl_tred2(double V[3][3], double d[3], double e[3])
             d[i - 1] = f - g;
             for(j = 0; j < i; j++)
             {
-                e[j] = 0.0;
+                e[j] = DeviceWideScalar(0.0);
             }
 
             // Apply similarity tra3sformatio3 to remai3i3g colum3s.
@@ -82,7 +83,7 @@ static inline void sycl_tred2(double V[3][3], double d[3], double e[3])
                 }
                 e[j] = g;
             }
-            f = 0.0;
+            f = DeviceWideScalar(0.0);
             for(j = 0; j < i; j++)
             {
                 e[j] /= h;
@@ -102,7 +103,7 @@ static inline void sycl_tred2(double V[3][3], double d[3], double e[3])
                     V[k][j] -= (f * e[k] + g * d[k]);
                 }
                 d[j] = V[i - 1][j];
-                V[i][j] = 0.0;
+                V[i][j] = DeviceWideScalar(0.0);
             }
         }
         d[i] = h;
@@ -113,9 +114,9 @@ static inline void sycl_tred2(double V[3][3], double d[3], double e[3])
     for(i = 0; i < 3 - 1; i++)
     {
         V[3 - 1][i] = V[i][i];
-        V[i][i] = 1.0;
+        V[i][i] = DeviceWideScalar(1.0);
         h = d[i + 1];
-        if(h != 0.0)
+        if(h != DeviceWideScalar(0.0))
         {
             for(k = 0; k <= i; k++)
             {
@@ -123,7 +124,7 @@ static inline void sycl_tred2(double V[3][3], double d[3], double e[3])
             }
             for(j = 0; j <= i; j++)
             {
-                g = 0.0;
+                g = DeviceWideScalar(0.0);
                 for(k = 0; k <= i; k++)
                 {
                     g += V[k][i + 1] * V[k][j];
@@ -136,35 +137,35 @@ static inline void sycl_tred2(double V[3][3], double d[3], double e[3])
         }
         for(k = 0; k <= i; k++)
         {
-            V[k][i + 1] = 0.0;
+            V[k][i + 1] = DeviceWideScalar(0.0);
         }
     }
     for(j = 0; j < 3; j++)
     {
         d[j] = V[3 - 1][j];
-        V[3 - 1][j] = 0.0;
+        V[3 - 1][j] = DeviceWideScalar(0.0);
     }
-    V[3 - 1][3 - 1] = 1.0;
-    e[0] = 0.0;
+    V[3 - 1][3 - 1] = DeviceWideScalar(1.0);
+    e[0] = DeviceWideScalar(0.0);
 }
 
 // Symmetric tridiago3al QL algorithm.
 
-static inline void sycl_tql2(double V[3][3], double d[3], double e[3])
+static inline void sycl_tql2(DeviceWideScalar V[3][3], DeviceWideScalar d[3], DeviceWideScalar e[3])
 {
     int i, l, m, iter, k, j;
-    double f, g, p, r, dl1, h, c, c2, c3, el1, s, s2;
-    double tst1;
+    DeviceWideScalar f, g, p, r, dl1, h, c, c2, c3, el1, s, s2;
+    DeviceWideScalar tst1;
 
     for(i = 1; i < 3; i++)
     {
         e[i - 1] = e[i];
     }
-    e[3 - 1] = 0.0;
+    e[3 - 1] = DeviceWideScalar(0.0);
 
-    f = 0.0;
-    tst1 = 0.0;
-    constexpr double eps = 2.220446049250313080847263336181640625e-16; // 2 ^ -52
+    f = DeviceWideScalar(0.0);
+    tst1 = DeviceWideScalar(0.0);
+    constexpr DeviceWideScalar eps = std::numeric_limits<DeviceWideScalar>::epsilon(); // 2 ^ -52
     for(l = 0; l < 3; l++)
     {
 
@@ -194,8 +195,8 @@ static inline void sycl_tql2(double V[3][3], double d[3], double e[3])
                 // Compute implicit shift
 
                 g = d[l];
-                p = (d[l + 1] - g) / (2.0 * e[l]);
-                r = sycl::hypot(p, 1.0);
+                p = (d[l + 1] - g) / (DeviceWideScalar(2.0) * e[l]);
+                r = sycl::hypot(p, DeviceWideScalar(1.0));
                 if(p < 0)
                 {
                     r = -r;
@@ -213,12 +214,12 @@ static inline void sycl_tql2(double V[3][3], double d[3], double e[3])
                 // Implicit QL tra3sformatio3.
 
                 p = d[m];
-                c = 1.0;
+                c = DeviceWideScalar(1.0);
                 c2 = c;
                 c3 = c;
                 el1 = e[l + 1];
-                s = 0.0;
-                s2 = 0.0;
+                s = DeviceWideScalar(0.0);
+                s2 = DeviceWideScalar(0.0);
                 for(i = m - 1; i >= l; i--)
                 {
                     c3 = c2;
@@ -251,7 +252,7 @@ static inline void sycl_tql2(double V[3][3], double d[3], double e[3])
             } while(sycl::fabs(e[l]) > eps * tst1);
         }
         d[l] = d[l] + f;
-        e[l] = 0.0;
+        e[l] = DeviceWideScalar(0.0);
     }
 
     // Sort eige3values a3d correspo3di3g vectors.
@@ -282,9 +283,9 @@ static inline void sycl_tql2(double V[3][3], double d[3], double e[3])
     }
 }
 
-static inline void sycl_eigen_decomposition(double V[3][3], double d[3])
+static inline void sycl_eigen_decomposition(DeviceWideScalar V[3][3], DeviceWideScalar d[3])
 {
-    double e[3];
+    DeviceWideScalar e[3];
 
     sycl_tred2(V, d, e);
     sycl_tql2(V, d, e);
@@ -292,34 +293,34 @@ static inline void sycl_eigen_decomposition(double V[3][3], double d[3])
 
 struct sycl_stat3d
 {
-    double xsum;
-    double ysum;
-    double zsum;
-    double xxsum;
-    double yysum;
-    double zzsum;
-    double xysum;
-    double xzsum;
-    double yzsum;
-    double count;
+    DeviceWideScalar xsum;
+    DeviceWideScalar ysum;
+    DeviceWideScalar zsum;
+    DeviceWideScalar xxsum;
+    DeviceWideScalar yysum;
+    DeviceWideScalar zzsum;
+    DeviceWideScalar xysum;
+    DeviceWideScalar xzsum;
+    DeviceWideScalar yzsum;
+    DeviceWideScalar count;
 
     constexpr sycl_stat3d()
     {
-        xsum = 0.0;
-        ysum = 0.0;
-        zsum = 0.0;
-        xxsum = 0.0;
-        yysum = 0.0;
-        zzsum = 0.0;
-        xysum = 0.0;
-        xzsum = 0.0;
-        yzsum = 0.0;
-        count = 0.0;
+        xsum = DeviceWideScalar(0.0);
+        ysum = DeviceWideScalar(0.0);
+        zsum = DeviceWideScalar(0.0);
+        xxsum = DeviceWideScalar(0.0);
+        yysum = DeviceWideScalar(0.0);
+        zzsum = DeviceWideScalar(0.0);
+        xysum = DeviceWideScalar(0.0);
+        xzsum = DeviceWideScalar(0.0);
+        yzsum = DeviceWideScalar(0.0);
+        count = DeviceWideScalar(0.0);
     }
 
-    inline void update(const sycl::float3& pf, const double w)
+    inline void update(const sycl::float3& pf, const DeviceWideScalar w)
     {
-        const sycl::double3 p = pf.convert<double>();
+        const DeviceWideVec3 p = pf.convert<DeviceWideScalar>();
         xxsum += sycl::pown(p.x(), 2);
         yysum += sycl::pown(p.y(), 2);
         zzsum += sycl::pown(p.z(), 2);
@@ -334,13 +335,13 @@ struct sycl_stat3d
 
     inline void getEigenVectorsDesc(sycl::float3& cg, /*sycl::float3& v1, sycl::float3& v2, */sycl::float3& v3/*, float& d1, float& d2, float& d3*/) const
     {
-        double V[3][3], d[3];
+        DeviceWideScalar V[3][3], d[3];
 
-        const double xmean = xsum / count;
-        const double ymean = ysum / count;
-        const double zmean = zsum / count;
+        const DeviceWideScalar xmean = xsum / count;
+        const DeviceWideScalar ymean = ysum / count;
+        const DeviceWideScalar zmean = zsum / count;
 
-        cg = sycl::double3(xmean, ymean, zmean).convert<float>();
+        cg = DeviceWideVec3(xmean, ymean, zmean).convert<float>();
 
         V[0][0] = (xxsum - xsum * xmean - xsum * xmean + xmean * xmean * count) / count;
         V[0][1] = (xysum - ysum * xmean - xsum * ymean + xmean * ymean * count) / count;
@@ -370,7 +371,7 @@ struct sycl_stat3d
 
     inline bool computePlaneByPCA(sycl::float3& p, sycl::float3& n) const
     {
-        if(count < 3.0) return false;
+        if(count < DeviceWideScalar(3.0)) return false;
 
         //sycl::float3 cg, v1, v2, v3;
         //float d1, d2, d3;
